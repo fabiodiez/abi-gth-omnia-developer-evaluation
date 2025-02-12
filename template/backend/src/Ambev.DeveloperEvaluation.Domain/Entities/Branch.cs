@@ -51,7 +51,7 @@ public class Branch : BaseEntity, IBranch
     public ValidationResultDetail Validate()
     {
         var validator = new BranchValidator();
-        var result = validator.Validate(this);
+        var result = validator.Validate(this.Name);
         return new ValidationResultDetail
         {
             IsValid = result.IsValid,

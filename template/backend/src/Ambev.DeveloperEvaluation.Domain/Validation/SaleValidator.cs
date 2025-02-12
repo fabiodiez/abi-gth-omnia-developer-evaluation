@@ -9,10 +9,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation;
 public class SaleValidator : AbstractValidator<Sale>
 {
     public SaleValidator()
-    {
-        RuleFor(s => s.SaleNumber)
-          .NotEmpty().WithMessage("Sale number is required.");
-
+    {       
         RuleFor(s => s.SaleDate)
           .NotEmpty().WithMessage("Sale date is required.");
 
