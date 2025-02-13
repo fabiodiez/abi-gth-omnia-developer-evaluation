@@ -42,30 +42,19 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     public Guid BranchId { get; set; }
 
     /// <summary>
-    /// Gets or sets a boolean value indicating whether the sale is cancelled.
-    /// </summary>
-    public bool IsCancelled { get; set; }
-
-    /// <summary>
     /// Gets or sets the customer associated with the sale.
     /// </summary>
-    public IUser Customer { get; set; }
+    public User Customer { get; set; }
 
     /// <summary>
     /// Gets or sets the branch where the sale was made.
     /// </summary>
-    public IBranch Branch { get; set; }
+    public Branch Branch { get; set; }
 
     /// <summary>
     /// Gets or sets the collection of items included in the sale.
     /// </summary>
-    public ICollection<ISaleItem> SaleItems { get; set; }    
+    public ICollection<SaleItem> Items { get; set; }    
 
-    /// <summary>
-    /// Cancels the sale by setting the IsCancelled flag to true.
-    /// </summary>
-    public void Cancel()
-    {
-        IsCancelled = true;
-    }
+    
 }

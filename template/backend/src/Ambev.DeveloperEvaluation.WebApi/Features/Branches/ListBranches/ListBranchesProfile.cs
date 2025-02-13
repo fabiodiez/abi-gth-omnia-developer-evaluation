@@ -11,7 +11,7 @@ public class ListBranchesProfile : Profile
 {
     public ListBranchesProfile()
     {
+        CreateMap<ListBranchesRequest, ListBranchesQuery>();
         CreateMap<ListBranchesResult, ListBranchesResponse>();
-        CreateMap<BranchDto, BranchDto>();
     }
 }

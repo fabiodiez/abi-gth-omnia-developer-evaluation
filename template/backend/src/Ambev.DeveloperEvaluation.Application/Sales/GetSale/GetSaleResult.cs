@@ -46,5 +46,5 @@ public class GetSaleResult
     /// <summary>
     /// the list of items included in the sale
     /// </summary>
-    public ICollection<ISaleItem> SaleItems { get; set; }
+    public ICollection<SaleItem> SaleItems { get; set; }
 }

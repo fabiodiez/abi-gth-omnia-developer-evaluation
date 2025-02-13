@@ -13,7 +13,6 @@ public class UpdateSaleCommandValidator : AbstractValidator<UpdateSaleCommand>
         RuleFor(sale => sale.SaleNumber).NotEmpty();
         RuleFor(sale => sale.SaleDate).NotEmpty();
         RuleFor(sale => sale.CustomerId).NotEmpty();
-        RuleFor(sale => sale.TotalAmount).GreaterThanOrEqualTo(0);
         RuleFor(sale => sale.BranchId).NotEmpty();
         RuleForEach(sale => sale.SaleItems).SetValidator(new UpdateSaleItemCommandValidator());
     }
@@ -29,8 +28,6 @@ public class UpdateSaleItemCommandValidator : AbstractValidator<UpdateSaleItemCo
         RuleFor(item => item.Id).NotEmpty();
         RuleFor(item => item.ProductId).NotEmpty();
         RuleFor(item => item.Quantity).GreaterThan(0);
-        RuleFor(item => item.UnitPrice).GreaterThan(0);
         RuleFor(item => item.Discount).GreaterThanOrEqualTo(0);
-        RuleFor(item => item.TotalItemAmount).GreaterThanOrEqualTo(0);
     }
 }

@@ -16,8 +16,9 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IProductRepository _productRepository;
+
     private readonly IMapper _mapper;
-    private readonly IPasswordHasher _passwordHasher;
 
     /// <summary>
     /// Initializes a new instance of CreateSaleHandler
@@ -25,12 +26,12 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     /// <param name="saleRepository">The Sale repository</param>
     /// <param name="mapper">The AutoMapper instance</param>
     /// <param name="validator">The validator for CreateSaleCommand</param>
-    public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, IPasswordHasher passwordHasher, IUserRepository userRepository)
+    public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, IUserRepository userRepository, IProductRepository productRepository)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
-        _passwordHasher = passwordHasher;
         _userRepository = userRepository;
+        _productRepository = productRepository;
     }
 
     /// <summary>
@@ -60,9 +61,14 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
                 throw new InvalidOperationException($"Maximum quantity of 20 items per product exceeded for product ID: {saleItem.ProductId}");
             }
 
+            var product = await _productRepository.GetByIdAsync(saleItem.ProductId, cancellationToken);
+            saleItem.UnitPrice = product.Price;
+
             saleItem.Discount = new SaleDiscountSpecification().CalculateDiscount(saleItem.Quantity, saleItem.UnitPrice);
             saleItem.Update(saleItem.Quantity, saleItem.UnitPrice,saleItem.Discount);
         }
+
+        sale.CalculateTotal();
 
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
         var result = _mapper.Map<CreateSaleResult>(createdSale);

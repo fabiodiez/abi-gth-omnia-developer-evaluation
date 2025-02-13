@@ -22,7 +22,6 @@ public class UpdateSaleCommand : IRequest<UpdateSaleResult>
     public int SaleNumber { get; set; }
     public DateTime SaleDate { get; set; }
     public Guid CustomerId { get; set; }
-    public decimal TotalAmount { get; set; }
     public Guid BranchId { get; set; }
     public bool IsCancelled { get; set; }
     public IEnumerable<UpdateSaleItemCommand> SaleItems { get; set; } = new List<UpdateSaleItemCommand>();
@@ -50,5 +49,4 @@ public class UpdateSaleItemCommand
     public decimal UnitPrice { get; set; }
     public decimal Discount { get; set; }
     public bool IsCancelled { get; set; }
-    public decimal TotalItemAmount { get; set; }
 }

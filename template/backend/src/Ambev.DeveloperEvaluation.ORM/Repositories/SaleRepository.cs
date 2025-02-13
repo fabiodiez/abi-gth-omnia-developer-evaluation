@@ -83,7 +83,15 @@ public class SaleRepository : ISaleRepository
     /// <returns>The updated sale</returns>
     public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken = default)
     {
-        _context.Sales.Update(sale);
+        var existingSale = await _context.Sales
+                                    .Include(s => s.SaleItems) 
+                                    .FirstOrDefaultAsync(s => s.Id == sale.Id);
+        if (existingSale == null)
+        {
+            throw new Exception("Sale not found");
+        }
+
+        _context.Entry(existingSale).CurrentValues.SetValues(sale);
         await _context.SaveChangesAsync(cancellationToken);
         return sale;
     }

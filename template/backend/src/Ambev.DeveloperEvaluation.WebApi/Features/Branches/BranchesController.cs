@@ -10,6 +10,9 @@ using Ambev.DeveloperEvaluation.Application.Branches.CreateBranch;
 using Ambev.DeveloperEvaluation.Application.Branches.GetBranch;
 using Ambev.DeveloperEvaluation.Application.Branches.UpdateBranch;
 using Ambev.DeveloperEvaluation.Application.Branches.DeleteBranch;
+using Ambev.DeveloperEvaluation.Application.Branches.ListBranches;
+using Ambev.DeveloperEvaluation.WebApi.Features.Branches.ListBranches;
+ 
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Branches;
 
@@ -61,7 +64,7 @@ public class BranchesController : BaseController
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<GetBranchCommand>(request.Id);
+        var command = _mapper.Map<GetBranchCommand>(request);
         var response = await _mediator.Send(command, cancellationToken);
 
         return Ok(new ApiResponseWithData<GetBranchResponse>
@@ -78,7 +81,7 @@ public class BranchesController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateBranch([FromRoute] Guid id, [FromBody] UpdateBranchRequest request, CancellationToken cancellationToken)
     {
-        request.Id = id; 
+        request.Id = id;
 
         var validator = new UpdateBranchRequestValidator();
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -96,7 +99,6 @@ public class BranchesController : BaseController
             Data = _mapper.Map<UpdateBranchResponse>(response)
         });
     }
-
 
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
@@ -118,6 +120,30 @@ public class BranchesController : BaseController
         {
             Success = true,
             Message = "Branch deleted successfully"
+        });
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseWithData<List<ListBranchesResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetAllBranches(CancellationToken cancellationToken)
+    {
+        var request = new ListBranchesRequest();
+
+        var validator = new ListBranchesRequestValidator();
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var command = _mapper.Map<ListBranchesQuery>(request);
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return Ok(new ApiResponseWithData<ListBranchesResponse>
+        {
+            Success = true,
+            Message = "Branches retrieved successfully",
+            Data = _mapper.Map<ListBranchesResponse>(response)
         });
     }
 }

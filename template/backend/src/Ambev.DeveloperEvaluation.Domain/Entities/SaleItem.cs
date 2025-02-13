@@ -2,6 +2,7 @@ using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Validation;
+using System.Text.Json.Serialization;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -9,7 +10,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 /// Represents an item in a sales transaction, linking a product to a sale with details such as quantity, price, and discount.
 /// This entity follows domain-driven design principles and includes business rules validation.
 /// </summary>
-public class SaleItem : BaseEntity, ISaleItem
+public class SaleItem : BaseEntity 
 {
     /// <summary>
     /// Gets or sets the ID of the sale to which this item belongs.
@@ -47,6 +48,7 @@ public class SaleItem : BaseEntity, ISaleItem
     /// <summary>
     /// Gets or sets the sale to which this item belongs.
     /// </summary>
+    [JsonIgnore]
     public Sale Sale { get; set; }
 
     /// <summary>
@@ -59,6 +61,7 @@ public class SaleItem : BaseEntity, ISaleItem
     /// Gets or sets status of this sale item.
     /// </summary>
     public bool IsCancelled { get; set; }
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SaleItem"/> class.

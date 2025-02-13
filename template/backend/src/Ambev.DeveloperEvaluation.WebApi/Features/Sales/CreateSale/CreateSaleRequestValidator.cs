@@ -48,9 +48,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
                         item.RuleFor(p => p.Discount)
                             .GreaterThanOrEqualTo(0).WithMessage("Discount must be greater than or equal to zero.")
                             .LessThanOrEqualTo(1).WithMessage("Discount must be between 0 and 1 (percentage).");
-
-                        item.RuleFor(p => p.TotalItemAmount)
-                            .GreaterThanOrEqualTo(0).WithMessage("Total item amount must be greater than or equal to zero.");
+                        
                     });
                 });
         }

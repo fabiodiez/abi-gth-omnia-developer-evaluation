@@ -41,10 +41,10 @@ public class GetProductHandler : IRequestHandler<GetProductCommand, GetProductRe
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var Product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (Product == null)
+        var product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (product == null)
             throw new KeyNotFoundException($"Product with ID {request.Id} not found");
 
-        return _mapper.Map<GetProductResult>(Product);
+        return _mapper.Map<GetProductResult>(product);
     }
 }

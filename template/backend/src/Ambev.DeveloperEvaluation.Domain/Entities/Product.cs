@@ -9,7 +9,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 /// Represents a product in the system, which can be sold in sales transactions.
 /// This entity follows domain-driven design principles and includes business rules validation.
 /// </summary>
-public class Product : BaseEntity, IProduct
+public class Product : BaseEntity
 {
     /// <summary>
     /// Gets or sets the name of the product.
@@ -27,25 +27,7 @@ public class Product : BaseEntity, IProduct
     /// Gets or sets the price of the product.
     /// Must be a positive value and represents the unit price in the system's currency.
     /// </summary>
-    public decimal Price { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date and time when the product was created.
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date and time of the last update to the product's information.
-    /// </summary>
-    public DateTime? UpdatedAt { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Product"/> class.
-    /// </summary>
-    public Product()
-    {
-        CreatedAt = DateTime.UtcNow;
-    }
+    public decimal Price { get; set; }    
 
     /// <summary>
     /// Performs validation of the product entity using the ProductValidator rules.
@@ -82,7 +64,6 @@ public class Product : BaseEntity, IProduct
     {
         Name = name;
         Description = description;
-        Price = price;
-        UpdatedAt = DateTime.UtcNow;
+        Price = price;       
     }
 }

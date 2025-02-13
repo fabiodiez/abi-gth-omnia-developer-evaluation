@@ -13,7 +13,11 @@ public class CreateSaleProfile : Profile
     /// </summary>
     public CreateSaleProfile()
     {
-        CreateMap<CreateSaleCommand, Sale>();
+
+        CreateMap<CreateSaleCommand, Sale>()
+           .ForMember(dest => dest.SaleItems, opt => opt.MapFrom(src => src.Items)); 
+
         CreateMap<Sale, CreateSaleResult>();
+
     }
 }

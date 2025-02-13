@@ -11,7 +11,8 @@ public class UpdateSaleProfile : Profile
 {
     public UpdateSaleProfile()
     {
-        CreateMap<UpdateSaleCommand, Sale>();
+        CreateMap<UpdateSaleCommand, Sale>()
+           .ForMember(dest => dest.SaleItems, opt => opt.MapFrom(src => src.SaleItems));
         CreateMap<UpdateSaleItemCommand, SaleItem>();
     }
 }

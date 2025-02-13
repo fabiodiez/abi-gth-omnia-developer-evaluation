@@ -10,6 +10,11 @@ using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
+using System.ComponentModel.Design;
+using Ambev.DeveloperEvaluation.Application.Products.ListProducts;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.ListSales;
+using Ambev.DeveloperEvaluation.Application.Sales.ListSales;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales;
 
@@ -86,7 +91,7 @@ public class SalesController : BaseController
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<UpdateSaleCommand>(request);
+        var command = _mapper.Map<UpdateSaleCommand>(request);        
         var response = await _mediator.Send(command, cancellationToken);
 
         return Ok(new ApiResponseWithData<UpdateSaleResponse>
@@ -94,6 +99,30 @@ public class SalesController : BaseController
             Success = true,
             Message = "Sale updated successfully",
             Data = _mapper.Map<UpdateSaleResponse>(response)
+        });
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseWithData<List<ListSalesResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetAllBranches(CancellationToken cancellationToken)
+    {
+        var request = new ListSalesRequest();
+
+        var validator = new ListSalesRequestValidator();
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var command = _mapper.Map<ListSalesQuery>(request);
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return Ok(new ApiResponseWithData<ListSalesResponse>
+        {
+            Success = true,
+            Message = "Sales retrieved successfully",
+            Data = _mapper.Map<ListSalesResponse>(response)
         });
     }
 

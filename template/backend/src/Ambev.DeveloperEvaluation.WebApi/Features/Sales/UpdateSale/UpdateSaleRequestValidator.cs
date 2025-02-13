@@ -27,7 +27,6 @@ public class UpdateSaleRequestValidator : AbstractValidator<UpdateSaleRequest>
         RuleFor(request => request.SaleNumber).NotEmpty().WithMessage("Sale number is required.");
         RuleFor(request => request.SaleDate).NotEmpty().WithMessage("Sale date is required.");
         RuleFor(request => request.CustomerId).NotEmpty().WithMessage("Customer ID is required.");
-        RuleFor(request => request.TotalAmount).GreaterThanOrEqualTo(0).WithMessage("Total amount must be greater than or equal to zero.");
         RuleFor(request => request.BranchId).NotEmpty().WithMessage("Branch ID is required.");
         RuleForEach(request => request.SaleItems).SetValidator(new UpdateSaleItemRequestValidator());
     }
@@ -57,8 +56,6 @@ public class UpdateSaleItemRequestValidator : AbstractValidator<UpdateSaleItemRe
         RuleFor(item => item.Id).NotEmpty().WithMessage("Item ID is required.");
         RuleFor(item => item.ProductId).NotEmpty().WithMessage("Product ID is required.");
         RuleFor(item => item.Quantity).GreaterThan(0).WithMessage("Quantity must be greater than zero.");
-        RuleFor(item => item.UnitPrice).GreaterThan(0).WithMessage("Unit price must be greater than zero.");
         RuleFor(item => item.Discount).GreaterThanOrEqualTo(0).WithMessage("Discount must be greater than or equal to zero.");
-        RuleFor(item => item.TotalItemAmount).GreaterThanOrEqualTo(0).WithMessage("Total item amount must be greater than or equal to zero.");
     }
 }

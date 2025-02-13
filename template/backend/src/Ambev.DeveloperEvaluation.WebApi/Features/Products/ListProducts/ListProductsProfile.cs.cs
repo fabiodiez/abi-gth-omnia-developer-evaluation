@@ -11,7 +11,7 @@ public class ListProductsProfile : Profile
 {
     public ListProductsProfile()
     {
+        CreateMap<ListProductsRequest, ListProductsQuery>();
         CreateMap<ListProductsResult, ListProductsResponse>();
-        CreateMap<ProductDto, ProductDto>(); // Mapeamento direto, se necessário.
     }
 }

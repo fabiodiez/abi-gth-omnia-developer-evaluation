@@ -40,6 +40,20 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
         public Guid BranchId { get; set; }
 
         /// <summary>
+        /// Gets or sets the customer associated with the sale.
+        /// </summary>
+        public User Customer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the branch where the sale was made.
+        /// </summary>
+        public Branch Branch { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of items included in the sale.
+        /// </summary>
+
+        /// <summary>
         /// The sale status
         /// </summary>
         public bool IsCancelled { get; set; }
@@ -47,7 +61,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
         /// <summary>
         /// the list of items included in the sale
         /// </summary>
-        public ICollection<ISaleItem> SaleItems { get; set; }
+        public ICollection<SaleItem> SaleItems { get; set; }
 
     }
 }

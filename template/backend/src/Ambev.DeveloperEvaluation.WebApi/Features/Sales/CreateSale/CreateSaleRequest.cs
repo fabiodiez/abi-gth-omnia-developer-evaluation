@@ -19,19 +19,9 @@ public class CreateSaleRequest
     public Guid CustomerId { get; set; }
 
     /// <summary>
-    /// Gets or sets the total amount of the sale.
-    /// </summary>
-    public decimal TotalAmount { get; set; }
-
-    /// <summary>
     /// Gets or sets the ID of the branch where the sale was made.
     /// </summary>
     public Guid BranchId { get; set; }
-
-    /// <summary>
-    /// Gets or sets whether the sale is cancelled.
-    /// </summary>
-    public bool IsCancelled { get; set; }
 
     /// <summary>
     /// Gets or sets the list of items included in the sale.
@@ -52,20 +42,11 @@ public class SaleItemRequest
     /// <summary>
     /// Gets or sets the quantity of the product.
     /// </summary>
-    public int Quantity { get; set; }
-
-    /// <summary>
-    /// Gets or sets the unit price of the product.
-    /// </summary>
-    public decimal UnitPrice { get; set; }
+    public int Quantity { get; set; }    
 
     /// <summary>
     /// Gets or sets the discount applied to the item.
     /// </summary>
     public decimal Discount { get; set; }
 
-    /// <summary>
-    /// Gets or sets the total amount for the item (calculated as Quantity * UnitPrice - Discount).
-    /// </summary>
-    public decimal TotalItemAmount { get; set; }
 }

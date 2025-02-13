@@ -30,16 +30,13 @@ public class CreateSaleCommandValidator : AbstractValidator<CreateSaleCommand>
         RuleFor(Sale => Sale.BranchId)
           .NotEmpty().WithMessage("Branch is required.");
 
-        RuleFor(Sale => Sale.TotalAmount)
-          .GreaterThanOrEqualTo(0).WithMessage("Total amount must be greater than or equal to zero.");
 
-        RuleFor(Sale => Sale.SaleItems)
+        RuleFor(Sale => Sale.Items)
           .NotEmpty().WithMessage("Sale must have at least one item.")
           .ForEach(itemRule => {
               itemRule.ChildRules(item => item.RuleFor(p => p.ProductId).NotEmpty()).WithMessage("Product is required.");
               itemRule.ChildRules(item => item.RuleFor(p => p.Quantity).NotEmpty()).WithMessage("Quantity must be greater than zero.");
               itemRule.ChildRules(item => item.RuleFor(p => p.Discount).InclusiveBetween(0, 1)).WithMessage("Discount must be between 0 and 1 (percentage).");
-              itemRule.ChildRules(item => item.RuleFor(p => p.TotalItemAmount).GreaterThanOrEqualTo(0)).WithMessage("Total item amount must be greater than or equal to zero.");
           });
     }
 }
