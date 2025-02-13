@@ -54,7 +54,7 @@ public class Sale : BaseEntity, ISale
     /// <summary>
     /// Gets or sets the branch where the sale was made.
     /// </summary>
-    public IBranch Branch { get; set; }
+    public virtual IBranch Branch { get; set; }
 
     /// <summary>
     /// Gets or sets the collection of items included in the sale.

@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Specifications;
+using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
@@ -12,10 +13,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleResult>
 {
     private readonly ISaleRepository _saleRepository;
+    private readonly IMapper _mapper;
 
-    public UpdateSaleHandler(ISaleRepository saleRepository)
+    public UpdateSaleHandler(ISaleRepository saleRepository, IMapper mapper)
     {
         _saleRepository = saleRepository;
+        _mapper = mapper;
     }
 
     public async Task<UpdateSaleResult> Handle(UpdateSaleCommand request, CancellationToken cancellationToken)
@@ -30,20 +33,8 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
                 Message = "Sale not found."
             };
         }
-        
-        sale.SaleDate = request.SaleDate;        
-        sale.TotalAmount = request.TotalAmount;
-        sale.BranchId = request.BranchId;
-        sale.IsCancelled = request.IsCancelled;
 
-        foreach (var itemCommand in request.SaleItems)
-        {
-            var item = sale.SaleItems.FirstOrDefault(i => i.Id == itemCommand.Id);
-            if (item != null)
-            {
-                item.Update(itemCommand.Quantity, itemCommand.UnitPrice, itemCommand.Discount);
-            }
-        }
+        _mapper.Map(request, sale);
 
         foreach (var saleItem in sale.SaleItems)
         {
@@ -53,7 +44,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
             }
 
             saleItem.Discount = new SaleDiscountSpecification().CalculateDiscount(saleItem.Quantity, saleItem.UnitPrice);
-            saleItem.TotalItemAmount = (saleItem.Quantity * saleItem.UnitPrice) - saleItem.Discount;
+            saleItem.Update(saleItem.Quantity, saleItem.UnitPrice, saleItem.Discount);
         }
 
         await _saleRepository.UpdateAsync(sale, cancellationToken);

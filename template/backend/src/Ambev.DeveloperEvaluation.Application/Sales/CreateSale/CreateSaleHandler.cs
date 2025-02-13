@@ -61,7 +61,7 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
             }
 
             saleItem.Discount = new SaleDiscountSpecification().CalculateDiscount(saleItem.Quantity, saleItem.UnitPrice);
-            saleItem.TotalItemAmount = (saleItem.Quantity * saleItem.UnitPrice) - saleItem.Discount;
+            saleItem.Update(saleItem.Quantity, saleItem.UnitPrice,saleItem.Discount);
         }
 
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
