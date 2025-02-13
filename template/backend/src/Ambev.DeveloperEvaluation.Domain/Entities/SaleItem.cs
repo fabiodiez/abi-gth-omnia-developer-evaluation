@@ -54,6 +54,12 @@ public class SaleItem : BaseEntity, ISaleItem
     /// </summary>
     public Product Product { get; set; }
 
+
+    /// <summary>
+    /// Gets or sets status of this sale item.
+    /// </summary>
+    public bool IsCancelled { get; set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SaleItem"/> class.
     /// </summary>

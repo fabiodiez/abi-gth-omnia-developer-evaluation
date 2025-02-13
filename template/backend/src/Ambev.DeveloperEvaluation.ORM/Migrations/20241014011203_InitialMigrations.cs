@@ -95,6 +95,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsCancelled = table.Column<bool>(type: "boolean", nullable: false),
                     TotalItemAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>

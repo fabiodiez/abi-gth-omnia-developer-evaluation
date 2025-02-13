@@ -9,4 +9,9 @@ public class GetBranchRequest
     /// The unique identifier of the branch to retrieve
     /// </summary>
     public Guid Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the branch. Must be unique and contain only valid characters.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
 }

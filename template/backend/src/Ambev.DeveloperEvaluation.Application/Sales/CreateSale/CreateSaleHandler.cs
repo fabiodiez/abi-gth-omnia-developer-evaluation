@@ -1,0 +1,71 @@
+﻿using AutoMapper;
+using MediatR;
+using FluentValidation;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Common.Security;
+using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.Specifications;
+
+namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+
+/// <summary>
+/// Handler for processing CreateSaleCommand requests
+/// </summary>
+public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleResult>
+{
+    private readonly ISaleRepository _saleRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
+    private readonly IPasswordHasher _passwordHasher;
+
+    /// <summary>
+    /// Initializes a new instance of CreateSaleHandler
+    /// </summary>
+    /// <param name="saleRepository">The Sale repository</param>
+    /// <param name="mapper">The AutoMapper instance</param>
+    /// <param name="validator">The validator for CreateSaleCommand</param>
+    public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, IPasswordHasher passwordHasher, IUserRepository userRepository)
+    {
+        _saleRepository = saleRepository;
+        _mapper = mapper;
+        _passwordHasher = passwordHasher;
+        _userRepository = userRepository;
+    }
+
+    /// <summary>
+    /// Handles the CreateSaleCommand request
+    /// </summary>
+    /// <param name="command">The CreateSale command</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The created Sale details</returns>
+    public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
+    {
+        var validator = new CreateSaleCommandValidator();
+        var validationResult = await validator.ValidateAsync(command, cancellationToken);
+
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
+        
+        var customer = await _userRepository.GetByIdAsync(command.CustomerId, cancellationToken);
+        if (customer.Role != UserRole.Customer)
+            throw new InvalidOperationException($"The user {customer.Username} is not a customer");
+
+        var sale = _mapper.Map<Sale>(command);
+
+        foreach (var saleItem in sale.SaleItems)
+        {
+            if (saleItem.Quantity > 20)
+            {
+                throw new InvalidOperationException($"Maximum quantity of 20 items per product exceeded for product ID: {saleItem.ProductId}");
+            }
+
+            saleItem.Discount = new SaleDiscountSpecification().CalculateDiscount(saleItem.Quantity, saleItem.UnitPrice);
+            saleItem.TotalItemAmount = (saleItem.Quantity * saleItem.UnitPrice) - saleItem.Discount;
+        }
+
+        var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
+        var result = _mapper.Map<CreateSaleResult>(createdSale);
+        return result;
+    }
+}

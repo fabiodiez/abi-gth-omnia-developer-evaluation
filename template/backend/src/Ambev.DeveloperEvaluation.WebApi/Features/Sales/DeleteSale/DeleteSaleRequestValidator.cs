@@ -1,7 +1,6 @@
-using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSales;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 
 /// <summary>
 /// Validator for DeleteSaleRequest

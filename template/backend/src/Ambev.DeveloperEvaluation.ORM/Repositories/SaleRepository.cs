@@ -46,6 +46,18 @@ public class SaleRepository : ISaleRepository
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
+
+    /// <summary>
+    /// Retrieves all sales 
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The sale if found, null otherwise</returns>
+    public async Task<List<Sale?>?> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Sales.Include(s => s.SaleItems).AsNoTracking().ToListAsync(cancellationToken);
+    }
+
+
     /// <summary>
     /// Deletes a sale from the database
     /// </summary>
