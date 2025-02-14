@@ -17,23 +17,6 @@ public class Branch : BaseEntity, IBranch
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets the date and time when the branch was created.
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date and time of the last update to the branch's information.
-    /// </summary>
-    public DateTime? UpdatedAt { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Branch"/> class.
-    /// </summary>
-    public Branch()
-    {
-        CreatedAt = DateTime.UtcNow;
-    }
 
     /// <summary>
     /// Performs validation of the branch entity using the BranchValidator rules.
@@ -66,6 +49,5 @@ public class Branch : BaseEntity, IBranch
     public void UpdateName(string name)
     {
         Name = name;
-        UpdatedAt = DateTime.UtcNow;
     }
 }

@@ -23,6 +23,23 @@ public interface IBranchRepository
     /// <returns>The branch if found, null otherwise</returns>
     Task<Branch?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
+
+
+    /// <summary>
+    /// Retrieves all branches
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The branch if found, null otherwise</returns>
+    Task<ICollection<Branch?>?> GetAllAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a branch by their Name
+    /// </summary>
+    /// <param name="name">The name of the branch</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The branch if found, null otherwise</returns>
+    Task<Branch?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Deletes a branch from the repository
     /// </summary>
@@ -38,4 +55,6 @@ public interface IBranchRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The updated branch</returns>
     Task<Branch> UpdateAsync(Branch branch, CancellationToken cancellationToken = default);
+
+   
 }

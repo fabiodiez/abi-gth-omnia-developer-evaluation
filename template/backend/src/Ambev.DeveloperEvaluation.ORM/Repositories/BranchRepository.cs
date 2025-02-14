@@ -45,6 +45,17 @@ public class BranchRepository : IBranchRepository
     }
 
     /// <summary>
+    /// Retrieves all branches
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The branch if found, null otherwise</returns>
+    public async Task<ICollection<Branch?>?> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Branches.AsNoTracking().ToListAsync(cancellationToken);
+    }
+
+
+    /// <summary>
     /// Deletes a branch from the database
     /// </summary>
     /// <param name="id">The unique identifier of the branch to delete</param>
@@ -72,5 +83,17 @@ public class BranchRepository : IBranchRepository
         _context.Branches.Update(branch);
         await _context.SaveChangesAsync(cancellationToken);
         return branch;
+    }
+
+    /// <summary>
+    /// Retrieves a branch by their name
+    /// </summary>
+    /// <param name="name">The name of the branch</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The branch if found, null otherwise</returns>
+    public async Task<Branch?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+    {
+        return await _context.Branches
+            .FirstOrDefaultAsync(u => u.Name == name, cancellationToken);
     }
 }

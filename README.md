@@ -1,86 +1,226 @@
-# Developer Evaluation Project
+# Ambev Developer Evaluation - Web API
 
-`READ CAREFULLY`
+This README provides a step-by-step guide to build, run, and test the Ambev Developer Evaluation Web API using Docker.
 
-## Instructions
-**The test below will have up to 7 calendar days to be delivered from the date of receipt of this manual.**
+## Prerequisites
 
-- The code must be versioned in a public Github repository and a link must be sent for evaluation once completed
-- Upload this template to your repository and start working from it
-- Read the instructions carefully and make sure all requirements are being addressed
-- The repository must provide instructions on how to configure, execute and test the project
-- Documentation and overall organization will also be taken into consideration
+- Docker Desktop (or Docker Engine) installed and running.
+- Git installed.
 
-## Use Case
-**You are a developer on the DeveloperStore team. Now we need to implement the API prototypes.**
+## Getting Started
 
-As we work with `DDD`, to reference entities from other domains, we use the `External Identities` pattern with denormalization of entity descriptions.
+1. **Clone the repository:**
 
-Therefore, you will write an API (complete CRUD) that handles sales records. The API needs to be able to inform:
+   ```bash
+   git clone https://github.com/fabiodiez/abi-gth-omnia-developer-evaluation.git
+   cd abi-gth-omnia-developer-evaluation\template\backend
+   ```
 
-* Sale number
-* Date when the sale was made
-* Customer
-* Total sale amount
-* Branch where the sale was made
-* Products
-* Quantities
-* Unit prices
-* Discounts
-* Total amount for each item
-* Cancelled/Not Cancelled
+2. **Build and Run the Docker image:**
 
-It's not mandatory, but it would be a differential to build code for publishing events of:
-* SaleCreated
-* SaleModified
-* SaleCancelled
-* ItemCancelled
+   Run the following command to build the Docker image for the Web API:
 
-If you write the code, **it's not required** to actually publish to any Message Broker. You can log a message in the application log or however you find most convenient.
+   ```bash
+   docker compose up --build
+   ```
 
-### Business Rules
+3. **Verify the containers are running:**
 
-* Purchases above 4 identical items have a 10% discount
-* Purchases between 10 and 20 identical items have a 20% discount
-* It's not possible to sell above 20 identical items
-* Purchases below 4 items cannot have a discount
+   Check the status of the containers with the following command:
 
-These business rules define quantity-based discounting tiers and limitations:
+   ```bash
+   docker-compose ps
+   ```
 
-1. Discount Tiers:
-   - 4+ items: 10% discount
-   - 10-20 items: 20% discount
+4. **Access the API:**
 
-2. Restrictions:
-   - Maximum limit: 20 items per product
-   - No discounts allowed for quantities below 4 items
+   Once the containers are running, you can access the API documentation (Swagger) at:
+   [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html).
 
-## Overview
-This section provides a high-level overview of the project and the various skills and competencies it aims to assess for developer candidates. 
+---
 
-See [Overview](/.doc/overview.md)
+## Testing the API
 
-## Tech Stack
-This section lists the key technologies used in the project, including the backend, testing, frontend, and database components. 
+### 1. Create a Customer User
 
-See [Tech Stack](/.doc/tech-stack.md)
+First, create a customer user using the following payload. Save the `id` of the user as it will be used to create a sale.
 
-## Frameworks
-This section outlines the frameworks and libraries that are leveraged in the project to enhance development productivity and maintainability. 
+**Endpoint:** `POST /api/Users`
 
-See [Frameworks](/.doc/frameworks.md)
+**Payload Example:**
 
-<!-- 
-## API Structure
-This section includes links to the detailed documentation for the different API resources:
-- [API General](./docs/general-api.md)
-- [Products API](/.doc/products-api.md)
-- [Carts API](/.doc/carts-api.md)
-- [Users API](/.doc/users-api.md)
-- [Auth API](/.doc/auth-api.md)
--->
+```json
+{
+  "username": "teste@teste.com",
+  "password": "Teste@10203040",
+  "phone": "62992616401",
+  "email": "teste@teste.com",
+  "status": 1,
+  "role": 1
+}
+```
+
+### 2. Create a Branch
+
+Next, create a branch. Save the `id` of the branch as it will be used to create a sale.
+
+**Endpoint:** `POST /api/Branches`
+
+**Payload Example:**
+
+```json
+{
+  "name": "São Paulo - SP"
+}
+```
+
+### 3. Create Products
+
+Create some products. Save the `id` of the products as they will be used to create a sale.
+
+**Endpoint:** `POST /api/Products`
+
+**Payload Example:**
+
+```json
+{
+  "name": "Stella Artois",
+  "description": "Stella Artois",
+  "price": 7.90
+}
+```
+
+You can use the `GET /api/Branches` and `GET /api/Products` endpoints to retrieve the `id`s if you didn't save them.
+
+### 4. Create a Sale
+
+Now you can create a sale. Below are some example payloads:
+
+#### Sale without Discount
+
+**Endpoint:** `POST /api/Sales`
+
+**Payload Example:**
+
+```json
+{
+  "saleDate": "2025-02-13T05:17:19.173Z",
+  "customerId": "CUSTOMER_ID_HERE",
+  "branchId": "BRANCH_ID_HERE",
+  "isCancelled": true,
+  "items": [
+    {
+      "productId": "PRODUCT_ID_HERE",
+      "quantity": 1
+    }
+  ]
+}
+```
+
+#### Sale with 10% Discount
+
+**Payload Example:**
+
+```json
+{
+  "saleDate": "2025-02-13T05:17:19.173Z",
+  "customerId": "CUSTOMER_ID_HERE",
+  "branchId": "BRANCH_ID_HERE",
+  "isCancelled": true,
+  "items": [
+    {
+      "productId": "PRODUCT_ID_HERE",
+      "quantity": 4
+    }
+  ]
+}
+```
+
+#### Sale with 20% Discount
+
+**Payload Example:**
+
+```json
+{
+  "saleDate": "2025-02-13T05:17:19.173Z",
+  "customerId": "CUSTOMER_ID_HERE",
+  "branchId": "BRANCH_ID_HERE",
+  "isCancelled": true,
+  "items": [
+    {
+      "productId": "PRODUCT_ID_HERE",
+      "quantity": 18
+    }
+  ]
+}
+```
+
+#### Sale Not Allowed (Quantity Exceeds Limit)
+
+**Payload Example:**
+
+```json
+{
+  "saleDate": "2025-02-13T05:17:19.173Z",
+  "customerId": "CUSTOMER_ID_HERE",
+  "branchId": "BRANCH_ID_HERE",
+  "isCancelled": true,
+  "items": [
+    {
+      "productId": "PRODUCT_ID_HERE",
+      "quantity": 22
+    }
+  ]
+}
+```
+
+### 5. List Sales
+
+You can list all sales using the following endpoint:
+
+**Endpoint:** `GET /api/Sales`
+
+---
+
+## Additional CRUD Operations
+
+All other CRUD operations are available for testing. You can explore them using the Swagger documentation at  [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html).
+
+---
+
+## Stopping the Containers
+
+To stop the containers, run the following command in the project's root directory:
+
+```bash
+docker-compose down
+```
+
+---
+
+## Troubleshooting
+
+- **Container logs:** To view the logs for a specific container (e.g., the Web API), run:
+
+  ```bash
+  docker-compose logs ambev_developer_evaluation_webapi -f
+  ```
+
+- **Database connection errors:** Ensure that the PostgreSQL container is running and accessible. You can check the logs for the database container with:
+
+  ```bash
+  docker-compose logs ambev_developer_evaluation_database
+  ```
+
+- **Port conflicts:** If you have other applications running on ports 8080 or 8081, you can change the port mappings in the `docker-compose.yml` file.
+
+---
 
 ## Project Structure
-This section describes the overall structure and organization of the project files and directories. 
 
-See [Project Structure](/.doc/project-structure.md)
+- `docker-compose.yml`: Defines the services (containers) and their configuration.
+- `Dockerfile`: Contains the instructions for building the Web API Docker image.
+- `src/`: Contains the source code for the Web API.
+
+---
+

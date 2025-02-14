@@ -8,11 +8,11 @@
         /// <summary>
         /// Gets the unique identifier of the branch.
         /// </summary>
-        Guid Id { get; }
+        Guid Id { get; set; }
 
         /// <summary>
         /// Gets the name of the branch.
         /// </summary>
-        string Name { get; }
+        string Name { get; set; }
     }
 }

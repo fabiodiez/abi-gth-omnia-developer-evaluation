@@ -2,6 +2,7 @@ using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Validation;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -13,12 +14,13 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 /// Represents a sale transaction in the system.
 /// This entity follows domain-driven design principles and includes business rules validation.
 /// </summary>
-public class Sale : BaseEntity, ISale
+public class Sale : BaseEntity
 {
     /// <summary>
     /// Gets or sets the unique number of the sale.
     /// Must not be null or empty.
     /// </summary>
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int SaleNumber { get; set; }
 
     /// <summary>
@@ -49,17 +51,18 @@ public class Sale : BaseEntity, ISale
     /// <summary>
     /// Gets or sets the customer associated with the sale.
     /// </summary>
-    public IUser Customer { get; set; }
+    public User Customer { get; set; }
 
     /// <summary>
     /// Gets or sets the branch where the sale was made.
     /// </summary>
-    public IBranch Branch { get; set; }
+    public Branch Branch { get; set; }
 
     /// <summary>
     /// Gets or sets the collection of items included in the sale.
     /// </summary>
-    public ICollection<ISaleItem> SaleItems { get; set; }
+    public IEnumerable<SaleItem> SaleItems { get; set; }
+
 
     /// <summary>
     /// Performs validation of the sale entity using the SaleValidator rules.
@@ -94,6 +97,11 @@ public class Sale : BaseEntity, ISale
     public void Cancel()
     {
         IsCancelled = true;
+    }
+
+    public void CalculateTotal()
+    {
+        TotalAmount = SaleItems.Sum(x => x.TotalItemAmount);
     }
 }
  
