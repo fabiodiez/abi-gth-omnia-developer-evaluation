@@ -56,6 +56,5 @@ public class UpdateSaleItemRequestValidator : AbstractValidator<UpdateSaleItemRe
         RuleFor(item => item.Id).NotEmpty().WithMessage("Item ID is required.");
         RuleFor(item => item.ProductId).NotEmpty().WithMessage("Product ID is required.");
         RuleFor(item => item.Quantity).GreaterThan(0).WithMessage("Quantity must be greater than zero.");
-        RuleFor(item => item.Discount).GreaterThanOrEqualTo(0).WithMessage("Discount must be greater than or equal to zero.");
     }
 }

@@ -42,11 +42,6 @@ public class SaleItemRequest
     /// <summary>
     /// Gets or sets the quantity of the product.
     /// </summary>
-    public int Quantity { get; set; }    
-
-    /// <summary>
-    /// Gets or sets the discount applied to the item.
-    /// </summary>
-    public decimal Discount { get; set; }
+    public int Quantity { get; set; }
 
 }
